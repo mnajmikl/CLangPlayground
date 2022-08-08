@@ -6,12 +6,12 @@
 #include <windows.h> //include windows header
 #define slowdown(x) Sleep(x)
 #define TIMEOUT 500
+#endif
 
-#elifdef __linux__
+#ifdef __linux__
 #include <unistd.h> //include POSIX standard C header
 #define slowdown(x) usleep(x)
 #define TIMEOUT 500000
-
 #endif
 
 #include "typeeffect.h"
