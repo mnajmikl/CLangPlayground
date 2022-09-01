@@ -124,33 +124,14 @@ static char *getintstring(const char* src)
 
 static long getlong(const char* src)
 {
-    int hasnoninteger = 0;
-    int n = strlen(src);
-    for (int j = 0; j < n; j++)
-    {
-        if (j == 0)
-        {
-            if (!((isvalidnumbersign(src[j])) || (isvalidnumber(src[j])))) return 0;
-        }
-        else
-        {
-            if(!isvalidnumber(src[j]))
-            {
-                hasnoninteger = 1;
-                break;
-            }
-        }
-    }
-    if (hasnoninteger) return 0;
+    size_t len = strlen(src);
     long sum = 0;
-    if (n == 1)
-    {
-        return (long) getnumber(src[0]);
-    }
-    for (int s = 0; s < n; s++)
+    if ((int) len == 0) return sum;
+    if ((int) len == 1) return (long) getnumber(src[0]);
+    for (int s = 0; s < (int) len; s++)
     {
         long d = getnumber(src[s]);
-        for (int p = n - 1; p > s; p--)
+        for (int p = (int) len - 1; p > s; p--)
             d *= 10;
         sum += d;
     }
@@ -161,6 +142,8 @@ static long double getdouble(const char* src)
 {
     size_t len = strlen(src);
     long double sum = 0.00f;
+    if ((int) len == 0) return sum;
+    if ((int) len == 1) return (long double) getnumber(src[0]);
     for (int s = 0; s < (int) len; s++)
     {
         long double d = (long double) getnumber(src[s]);
