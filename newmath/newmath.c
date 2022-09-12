@@ -1,7 +1,3 @@
-/* Uncomment this to debug
-#define __USE_MINGW_ANSI_STDIO 1
-#include <stdio.h>
-*/
 #include "newmath.h"
 
 /* Static functions in "newmath.c"
@@ -156,11 +152,21 @@ static long double getdouble(const char* src)
 
 long stringtolong(const char* src)
 {
-    return (isnegative(src) ? -1 : 1) * getlong(getintstring(src));
+    char* istring = getintstring(src);
+    long long1 = getlong(istring);
+    free(istring);
+    return (isnegative(src) ? -1 : 1) * long1;
 }
 
 long double stringtodouble(const char* src)
 {
-    return ((isnegative(src) ? -1 : 1) * (long double) getlong(getintstring(src))) \
-           + ((isnegative(src) ? -1 : 1) * getdouble(getfloatstring(src)));
+    char* istring = getintstring(src);
+    char* dstring = getfloatstring(src);
+    long double d1 = (long double) getlong(istring);
+    long double d2 = getdouble(dstring);
+    free(istring);
+    free(dstring);
+    return ((isnegative(src) ? -1 : 1) * d1) + ((isnegative(src) ? -1 : 1) * d2);
+    /* return ((isnegative(src) ? -1 : 1) * (long double) getlong(getintstring(src))) \
+           + ((isnegative(src) ? -1 : 1) * getdouble(getfloatstring(src))); */
 }

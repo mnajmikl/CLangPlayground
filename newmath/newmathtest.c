@@ -1,6 +1,4 @@
-#define __USE_MINGW_ANSI_STDIO 1
 #include <stdio.h>
-#include <string.h>
 #include "newmath.h"
 
 int main()
