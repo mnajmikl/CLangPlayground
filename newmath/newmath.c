@@ -167,6 +167,4 @@ long double stringtodouble(const char* src)
     free(istring);
     free(dstring);
     return ((isnegative(src) ? -1 : 1) * d1) + ((isnegative(src) ? -1 : 1) * d2);
-    /* return ((isnegative(src) ? -1 : 1) * (long double) getlong(getintstring(src))) \
-           + ((isnegative(src) ? -1 : 1) * getdouble(getfloatstring(src))); */
 }
