@@ -13,30 +13,7 @@
 
 static int getnumber(char n)
 {
-    switch(n)
-    {
-    case '1':
-        return 1;
-    case '2':
-        return 2;
-    case '3':
-        return 3;
-    case '4':
-        return 4;
-    case '5':
-        return 5;
-    case '6':
-        return 6;
-    case '7':
-        return 7;
-    case '8':
-        return 8;
-    case '9':
-        return 9;
-    /* '0' and other characters */
-    default:
-        return 0;
-    }
+    return ((n - 48 >= 0) && (n - 48 <= 57)) ? (n - 48) : 0;
 }
 
 static int isvalidnumber(char c)
@@ -57,7 +34,7 @@ static int isnegative(const char* src)
 static char *getfloatstring(const char* src)
 {
     size_t len = strlen(src);
-    char *decimals = (char *) calloc(len, sizeof(char));
+    char *decimals = (char*) calloc(len, sizeof(char));
     /* Find the decimal point */
     size_t pos = strcspn(src, ".");
     if (pos >= len)
@@ -94,7 +71,7 @@ static char *getfloatstring(const char* src)
 static char *getintstring(const char* src)
 {
     size_t len = strlen(src);
-    char *integers = (char *) calloc(len, sizeof(char));
+    char *integers = (char*) calloc(len, sizeof(char));
     /* Find the decimal point */
     size_t pos = strcspn(src, ".");
     int c = 0;
@@ -155,7 +132,7 @@ long stringtolong(const char* src)
     char* istring = getintstring(src);
     long long1 = getlong(istring);
     free(istring);
-    return (isnegative(src) ? -1 : 1) * long1;
+    return ((isnegative(src) ? -1 : 1) * long1);
 }
 
 long double stringtodouble(const char* src)
