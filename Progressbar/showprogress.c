@@ -37,7 +37,7 @@ static char* repeatchar(const char* str, int count)
         strcpy(cpy, str);
     else
         return NULL;
-    if (count == 0)
+    if (count <= 0)
         return cpy;
     char* repeat = calloc((strlen(str) * count) + 1, sizeof(char));
     if (repeat == NULL)
