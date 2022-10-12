@@ -1,3 +1,7 @@
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include <stdio.h>
 #include <string.h>
 
@@ -6,14 +10,16 @@ struct element
     int elementnumber;
     char elementsymbol[4];
     char elementname[16];
+    double atomicweight1;
+    double atomicweight2;
 };
 
-int getelementcount()
+static int getelementcount(void)
 {
     int count_lines = 0;
     FILE *fp;
     fp = fopen("elements.csv","r");
-    char chr = getc(fp);
+    int chr = getc(fp);
     while (chr != EOF)
     {
         if (chr == '\n')
@@ -26,26 +32,37 @@ int getelementcount()
     return count_lines;
 }
 
-void displaynumberofelements()
+static void displaynumberofelements(void)
 {
-    printf("\nThere are currently %d elements in the latest Element Periodic Table\n", getelementcount());
+    printf("\nThere are currently %d elements in he latest Periodic Table\n",
+           getelementcount());
 }
-void displayelements()
+
+static void displayelements(void)
 {
     FILE *fp;
     fp = fopen("elements.csv","r");
     struct element displayelement;
     while (!feof(fp))
     {
-        fscanf(fp, "%d,%[^,\n],%[^,\n]\n",
-               &displayelement.elementnumber, displayelement.elementsymbol, displayelement.elementname);
-        printf("Element number: %3d\tElement Symbol: %3s\tElement Name: %s\n",
-               displayelement.elementnumber, displayelement.elementsymbol, displayelement.elementname);
+        fscanf(fp, "%d,%[^,\n],%[^,\n],%lf,%lf\n",
+               &displayelement.elementnumber, displayelement.elementsymbol,
+               displayelement.elementname, &displayelement.atomicweight1,
+               &displayelement.atomicweight2);
+        printf("Element number: %3d\tElement Symbol: %3s",
+               displayelement.elementnumber,
+               displayelement.elementsymbol);
+        printf("\tElement Name: %13s",
+               displayelement.elementname);
+        printf("\tLowest Atomic Weight: %12.8lf",
+               displayelement.atomicweight1);
+        printf("\tHighest Atomic Weight: %12.8lf\n",
+               displayelement.atomicweight2);
     }
     fclose(fp);
 }
 
-void searchelementsbynumber()
+static void searchelementsbynumber(void)
 {
     FILE *fp;
     int element_number = 0, found = 0;
@@ -56,14 +73,23 @@ void searchelementsbynumber()
     fp = fopen("elements.csv","r");
     while (!feof(fp))
     {
-        fscanf(fp, "%d,%[^,\n],%[^,\n]\n", &searchelement.elementnumber,
-               searchelement.elementsymbol, searchelement.elementname);
+        fscanf(fp, "%d,%[^,\n],%[^,\n],%lf,%lf\n",
+               &searchelement.elementnumber, searchelement.elementsymbol,
+               searchelement.elementname, &searchelement.atomicweight1,
+               &searchelement.atomicweight2);
         if (searchelement.elementnumber == element_number)
         {
-            printf("\nElement Number %d has been found\n", searchelement.elementnumber);
-            printf("Element number: %3d\tElement Symbol: %3s\tElement Name: %s\n",
-                   searchelement.elementnumber, searchelement.elementsymbol,
+            printf("\nElement Number %d has been found\n",
+                   searchelement.elementnumber);
+            printf("Element number: %3d\tElement Symbol: %3s",
+                   searchelement.elementnumber,
+                   searchelement.elementsymbol);
+            printf("\tElement Name: %13s",
                    searchelement.elementname);
+            printf("\tLowest Atomic Weight: %12.8lf",
+                   searchelement.atomicweight1);
+            printf("\tHighest Atomic Weight: %12.8lf\n",
+                   searchelement.atomicweight2);
             found = 1;
             break;
         }
@@ -75,7 +101,7 @@ void searchelementsbynumber()
     fclose(fp);
 }
 
-void searchelementsbysymbol()
+static void searchelementsbysymbol(void)
 {
     FILE *fp;
     char element_symbol[4];
@@ -87,13 +113,22 @@ void searchelementsbysymbol()
     fp = fopen("elements.csv","r");
     while (!feof(fp))
     {
-        fscanf(fp, "%d,%[^,\n],%[^,\n]\n", &searchelement.elementnumber,
-               searchelement.elementsymbol, searchelement.elementname);
+        fscanf(fp, "%d,%[^,\n],%[^,\n],%lf,%lf\n",
+               &searchelement.elementnumber, searchelement.elementsymbol,
+               searchelement.elementname, &searchelement.atomicweight1,
+               &searchelement.atomicweight2);
         if (strcmp(element_symbol, searchelement.elementsymbol) == 0)
         {
             printf("\nElement Symbol %s has been found\n", element_symbol);
-            printf("Element number: %3d\tElement Symbol: %3s\tElement Name: %s\n",
-                   searchelement.elementnumber, searchelement.elementsymbol, searchelement.elementname);
+            printf("Element number: %3d\tElement Symbol: %3s",
+                   searchelement.elementnumber,
+                   searchelement.elementsymbol);
+            printf("\tElement Name: %13s",
+                   searchelement.elementname);
+            printf("\tLowest Atomic Weight: %12.8lf",
+                   searchelement.atomicweight1);
+            printf("\tHighest Atomic Weight: %12.8lf\n",
+                   searchelement.atomicweight2);
             found = 1;
             break;
         }
@@ -105,7 +140,7 @@ void searchelementsbysymbol()
     fclose(fp);
 }
 
-void menu()
+static void menu(void)
 {
     char choice = '1';
     while (choice != '5')
@@ -146,7 +181,7 @@ void menu()
     }
 }
 
-int main()
+int main(void)
 {
     menu();
     return 0;
