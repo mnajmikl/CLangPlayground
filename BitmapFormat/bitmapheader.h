@@ -139,4 +139,7 @@ struct BitmapPixelArrayTable
 	 */
 	unsigned int numberofpaddings;
 };
+
+int LE4hexstring(const unsigned char*, char*);
+
 #endif
