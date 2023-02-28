@@ -1,0 +1,104 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include "bitmapheader.h"
+
+int main(void)
+{
+	struct BitmapCoreHeader bmpheader;
+	struct BitmapDIBHeader dibheader;
+	FILE* bitmapfile = fopen("bitmap.bmp","rb");
+	if (bitmapfile != NULL)
+	{
+		size_t fileheader_read = fread(&bmpheader, sizeof(struct BitmapCoreHeader), 1, bitmapfile);
+		if (fileheader_read == 0)
+		{
+			printf("Cannot read the bitmap file header\n");
+			return -1;
+		}
+		char hex[3] = {0x0};
+		char sizehex[13] = {0x0};
+		strcat(sizehex, "0x");
+		for(int i = 3; i >=0; i--)
+		{
+			sprintf(hex, "%02x", bmpheader.size[i]);
+			strcat(sizehex, hex);
+		}
+		printf("%c%c\nFile size: %s %ld bytes\n", bmpheader.tag[0], bmpheader.tag[1], sizehex, strtol(sizehex, NULL, 16));
+		size_t dibheader_read = fread(&dibheader, sizeof(struct BitmapDIBHeader), 1, bitmapfile);
+		if (dibheader_read == 0)
+		{
+			printf("Cannot read the bitmap DIB header\n");
+			return -1;
+		}
+		strcpy(sizehex, "0x");
+		for(int i = 3; i >=0; i--)
+		{
+			sprintf(hex, "%02x", dibheader.pixelwidth[i]);
+			strcat(sizehex, hex);
+		}
+		int imagewidth = strtol(sizehex, NULL, 16);
+		printf("Pixel Width: %s %d\n", sizehex, imagewidth);
+		strcpy(sizehex, "0x");
+		for(int i = 3; i >=0; i--)
+		{
+			sprintf(hex, "%02x", dibheader.pixelheight[i]);
+			strcat(sizehex, hex);
+		}
+		int imageheight = strtol(sizehex, NULL, 16);
+		printf("Pixel Height: %s %d\n", sizehex, imageheight);
+		strcpy(sizehex, "0x");
+		for(int i = 3; i >=0; i--)
+		{
+			sprintf(hex, "%02x", dibheader.pixelarraysize[i]);
+			strcat(sizehex, hex);
+		}
+		int pixelarraysize = strtol(sizehex, NULL, 16);
+		printf("Pixel Array Table size: %s %d\n", sizehex, pixelarraysize);
+		
+		struct BitmapPixelArrayTable pixelcolortable;
+		int numberofpaddings = ((imagewidth * 3) % 4) > 0 ? 4 - ((imagewidth * 3) % 4) : 0;
+		printf("Paddings per width: %d\n", numberofpaddings);
+		pixelcolortable.numberofpaddings =  numberofpaddings;
+		pixelcolortable.numberofcolordata = imagewidth * imageheight;
+		pixelcolortable.rowscolordata = calloc(sizeof(struct BGRColor), pixelcolortable.numberofcolordata);
+		if (pixelcolortable.rowscolordata == NULL)
+		{
+			printf("Unable to allocate memory for the pixel array table");
+		}
+		else
+		{
+			for (unsigned int i = 0; i < pixelcolortable.numberofcolordata; i++)
+			{
+				size_t table_read = fread(&pixelcolortable.rowscolordata[i], sizeof(struct BGRColor), 1, bitmapfile);
+				if (table_read == 0)
+				{
+					break;
+				}
+				else
+				{
+					printf("0x%02x 0x%02x 0x%02x ", pixelcolortable.rowscolordata[i].red, pixelcolortable.rowscolordata[i].green,
+							pixelcolortable.rowscolordata[i].blue);
+				}
+				if (((i+1) % imagewidth == 0) && (pixelcolortable.numberofpaddings > 0))
+				{
+					for (unsigned int j = 0; j < pixelcolortable.numberofpaddings; j++)
+					{
+						unsigned char padding;
+						fread(&padding, sizeof(char), 1, bitmapfile);
+						printf("0x%02x ", padding);
+					}
+				}
+			}
+			printf("\n");
+			free(pixelcolortable.rowscolordata);
+		}
+		fclose(bitmapfile);
+	}
+	else
+	{
+		printf("File bitmap.bmp is not accessible.\n");
+	}
+	return 0;
+}
