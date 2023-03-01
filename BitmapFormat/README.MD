@@ -1,3 +1,7 @@
 # Bitmap Format
-A collection of code that works with decimal and hexadecimal numbers.
-The example here is Bitmap image file format i.e. its header, DIB header, and pixel table.
+Windows Bitmap Format
+Two programs for this sample
+Create a Windows bitmap file (create.c)
+Read from a Windows bitmap file (read.c)
+
+The header bitmapheader.h and its companion definition file bitmapheader.c
