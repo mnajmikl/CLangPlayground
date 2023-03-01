@@ -12,7 +12,7 @@ int main(void)
 	struct BitmapPixelArrayTable bitmapdata;
 	defaultbitmapheader(&bmpheader);
 	defaultdibheader(&dibheader);
-    	bitmapdata.numberofpaddings = ((WIDTH * 3) % 4) > 0 ? 4 - ((WIDTH * 3) % 4) : 0;
+    bitmapdata.numberofpaddings = ((WIDTH * 3) % 4) > 0 ? 4 - ((WIDTH * 3) % 4) : 0;
 	bitmapdata.numberofcolordata = WIDTH * HEIGHT;
 	int pixelarraytablesize = ((WIDTH * 3) + bitmapdata.numberofpaddings) * HEIGHT;
 	setbitmapheadersize(&bmpheader, 54 + pixelarraytablesize);
