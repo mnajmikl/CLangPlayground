@@ -141,5 +141,10 @@ struct BitmapPixelArrayTable
 };
 
 int LE4hexstring(const unsigned char*, char*);
+void defaultbitmapheader(struct BitmapCoreHeader*);
+void defaultdibheader(struct BitmapDIBHeader*);
+void setbitmapheadersize(struct BitmapCoreHeader*, const unsigned int);
+void setdibheadersize(struct BitmapDIBHeader*, const unsigned int);
+void setbitmappixeldimensions(struct BitmapDIBHeader*, const unsigned int, const unsigned int);
 
 #endif

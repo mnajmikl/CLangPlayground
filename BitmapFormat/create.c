@@ -3,35 +3,21 @@
 #include <time.h>
 #include "bitmapheader.h"
 #define WIDTH 31
+#define HEIGHT 31
 
 int main(void)
 {
-	struct BitmapCoreHeader bmpheader = {
-		{0x42, 0x4D}, 
-		{0xd6, 0xb, 0x0, 0x0},
-		{0x0, 0x0},
-		{0x0, 0x0},
-		{0x36, 0x0, 0x0, 0x0}
-	};
-	struct BitmapDIBHeader dibheader = {
-		{0x28, 0x0, 0x0, 0x0},
-		{0x1f, 0x0, 0x0, 0x0},
-		{0x1f, 0x0, 0x0, 0x0},
-		{0x1, 0x0},
-		{0x18, 0x0},
-		{0x0, 0x0, 0x0, 0x0},
-		{0xa0, 0xb, 0x0, 0x0},
-		{0xc4, 0xe, 0x0, 0x0},
-		{0xc4, 0xe, 0x0, 0x0},
-		{0x0, 0x0, 0x0, 0x0},
-		{0x0, 0x0, 0x0, 0x0}
-	};
+	struct BitmapCoreHeader bmpheader;
+	struct BitmapDIBHeader dibheader;
 	struct BitmapPixelArrayTable bitmapdata;
-	/* 32 for width is a hard coded number. 
-	 * Get the actual number from dibheader.pixelwidth by doing some bitshift + sprintf + strtoll
-	 */
+	defaultbitmapheader(&bmpheader);
+	defaultdibheader(&dibheader);
     bitmapdata.numberofpaddings = ((WIDTH * 3) % 4) > 0 ? 4 - ((WIDTH * 3) % 4) : 0;
-	bitmapdata.numberofcolordata = WIDTH * WIDTH;
+	bitmapdata.numberofcolordata = WIDTH * HEIGHT;
+	int pixelarraytablesize = ((WIDTH * 3) + bitmapdata.numberofpaddings) * HEIGHT;
+	setbitmapheadersize(&bmpheader, 54 + pixelarraytablesize);
+	setdibheadersize(&dibheader, pixelarraytablesize);
+	setbitmappixeldimensions(&dibheader, WIDTH, HEIGHT);
 	bitmapdata.rowscolordata = calloc(sizeof(struct BGRColor), bitmapdata.numberofcolordata);
 	if (bitmapdata.rowscolordata == NULL)
 	{
@@ -65,6 +51,7 @@ int main(void)
 				}
 			}
 		}
+		printf("File bitmap.bmp has been created\n");
 		fclose(bitmapfile);
 	}
 	free(bitmapdata.rowscolordata);
