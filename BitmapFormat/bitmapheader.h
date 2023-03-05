@@ -126,7 +126,8 @@ struct BitmapPixelArrayTable
 	 */
 	struct BGRColor* rowscolordata;
 	/*
-	 * Total number of color data for rowscolordata (width * height * 3)
+	 * Total number of color data  = width * height
+	 * Total numbers of color data in bytes = numberofcolordata * 3 (Blue, Green, Red)
 	 */
 	unsigned int numberofcolordata;
 	/*
