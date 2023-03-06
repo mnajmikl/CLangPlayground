@@ -74,3 +74,11 @@ void setbitmappixeldimensions(struct BitmapDIBHeader* dbh, const unsigned int wi
 	dbh->pixelheight[2] = (height>>16) & 0xff;
 	dbh->pixelheight[3] = (height>>24) & 0xff;
 }
+
+void getgrayscale(struct BGRColor* bgr)
+{
+	double newcolor = (bgr->blue * 0.11) + (bgr->green * 0.59) + (bgr->red * 0.3);
+	bgr->blue = (unsigned char) newcolor;
+	bgr->green = (unsigned char) newcolor;
+	bgr->red = (unsigned char) newcolor;
+}

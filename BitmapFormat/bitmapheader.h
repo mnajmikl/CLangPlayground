@@ -147,5 +147,6 @@ void defaultdibheader(struct BitmapDIBHeader*);
 void setbitmapheadersize(struct BitmapCoreHeader*, const unsigned int);
 void setdibheadersize(struct BitmapDIBHeader*, const unsigned int);
 void setbitmappixeldimensions(struct BitmapDIBHeader*, const unsigned int, const unsigned int);
+void getgrayscale(struct BGRColor*);
 
 #endif
