@@ -34,8 +34,6 @@ int main(void)
 		int imagewidth = strtol(sizehex, NULL, 16);
 		LE4hexstring(dibheader.pixelheight, sizehex);
 		int imageheight = strtol(sizehex, NULL, 16);
-		LE4hexstring(dibheader.pixelarraysize, sizehex);
-		int pixelarraysize = strtol(sizehex, NULL, 16);
 		struct BitmapPixelArrayTable pixelcolortable;
 		int numberofpaddings = ((imagewidth * 3) % 4) > 0 ? 4 - ((imagewidth * 3) % 4) : 0;
 		pixelcolortable.numberofpaddings =  numberofpaddings;

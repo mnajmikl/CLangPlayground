@@ -27,6 +27,6 @@ create.obj : create.c
 
 grayscale.obj : grayscale.c
 	$(CC) /Wall /O2 /MD /GS- /c /Fo:grayscale grayscale.c
-	
+
 clean:
 	del /f /q *.obj *.exe *.dll *.lib
