@@ -1,32 +1,45 @@
 CC = cl
+CCFLAGS = /nologo /Os /MD /GS- /c /w
 LIBL = lib
+LIBLFLAGS =  /nologo /nodefaultlib
 LINK = link
+BMP_LINK_FLAGS = /nologo /nodefaultlib /entry:main /release /subsystem:console bitmapheader.lib msvcrt.lib ucrt.lib vcruntime.lib
+OUTPUTLIB = @echo Created executable %%~nxl
+OUTPUTOBJ = @echo Created executable %%~nxo
+OUTPUTEXE = @echo Created executable %%~nxa
 
-all: lib create read grayscale
+all: lib create read grayscale .phony
+
+bitmapheader.obj: 
+	@$(CC) $(CCFLAGS) /Fo:bitmapheader bitmapheader.c > nul
 
 lib: bitmapheader.obj
-	$(LIBL) /out:bitmapheader.lib bitmapheader.obj
+	@$(LIBL) $(LIBLFLAGS) /out:bitmapheader.lib bitmapheader.obj 
+
+read.obj:
+	@$(CC) $(CCFLAGS) /Fo:read read.c > nul
+
+create.obj:
+	@$(CC) $(CCFLAGS) /Fo:create create.c > nul
+
+grayscale.obj:
+	@$(CC) $(CCFLAGS) /Fo:grayscale grayscale.c > nul
 
 create: lib create.obj
-	$(LINK) /release /subsystem:console create.obj bitmapheader.lib
+	@$(LINK) $(BMP_LINK_FLAGS) create.obj
 
 read: lib read.obj
-	$(LINK) /release /subsystem:console read.obj bitmapheader.lib
+	@$(LINK) $(BMP_LINK_FLAGS) read.obj
 
 grayscale: lib grayscale.obj
-	$(LINK) /release /subsystem:console grayscale.obj bitmapheader.lib
+	@$(LINK) $(BMP_LINK_FLAGS) grayscale.obj
 
-bitmapheader.obj: bitmapheader.c bitmapheader.h
-	$(CC) /Wall /O2 /MD /GS- /c /Fo:bitmapheader bitmapheader.c
-
-read.obj : read.c
-	$(CC) /Wall /O2 /MD /GS- /c /Fo:read read.c
-
-create.obj : create.c
-	$(CC) /Wall /O2 /MD /GS- /c /Fo:create create.c
-
-grayscale.obj : grayscale.c
-	$(CC) /Wall /O2 /MD /GS- /c /Fo:grayscale grayscale.c
+.phony:
+	@echo.
+	@for %%l in (*.lib) do $(OUTPUTLIB)
+	@for %%o in (*.obj) do $(OUTPUTOBJ)
+	@for %%a in (*.exe) do $(OUTPUTEXE)
 
 clean:
-	del /f /q *.obj *.exe *.dll *.lib
+	@echo Deleting all compiled objects
+	@del /f /s *.obj *.exe *.dll *.lib
