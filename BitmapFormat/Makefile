@@ -4,8 +4,8 @@ LIBL = lib
 LIBLFLAGS =  /nologo /nodefaultlib
 LINK = link
 BMP_LINK_FLAGS = /nologo /nodefaultlib /entry:main /release /subsystem:console bitmapheader.lib msvcrt.lib ucrt.lib vcruntime.lib
-OUTPUTLIB = @echo Created executable %%~nxl
-OUTPUTOBJ = @echo Created executable %%~nxo
+OUTPUTLIB = @echo Created library file %%~nxl
+OUTPUTOBJ = @echo Created source object %%~nxo
 OUTPUTEXE = @echo Created executable %%~nxa
 
 all: lib create read grayscale .phony
